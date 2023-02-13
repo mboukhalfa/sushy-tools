@@ -32,6 +32,9 @@ class FakeDriver(AbstractSystemsDriver):
                 'uuid': DEFAULT_UUID,
                 'name': 'fake',
                 'power_state': 'Off',
+                'ifaces': [
+                    {'address':'00:5c:52:31:3a:9c'}
+                ]
             }
         ])
         cls._config = config
@@ -159,3 +162,8 @@ class FakeDriver(AbstractSystemsDriver):
         devinfo = system.get('boot_image') or {}
         devinfo[device] = (boot_image, write_protected, bool(boot_image))
         self._update(system, boot_image=devinfo)
+
+    def get_nics(self, identity):
+        ifaces = self._get(identity)['ifaces']
+        return [{'id': iface.get('address'), 'mac': iface.get('address')}
+                for iface in ifaces]
